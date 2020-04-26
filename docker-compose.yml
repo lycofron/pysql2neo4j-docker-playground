@@ -1,0 +1,27 @@
+version: "3"
+
+networks:
+        pysql2neo4j-backnet:
+
+services:
+        mysqldb:
+                build: mysql-sakila/
+                environment:
+                        MYSQL_ROOT_PASSWORD: 123456
+                        MYSQL_DATABASE: sakila
+                        MYSQL_USER: sakila
+                        MYSQL_PASSWORD: 123456
+                networks:
+                        - pysql2neo4j-backnet
+        neo4j:
+                image: neo4j:4.0
+                networks:
+                        - pysql2neo4j-backnet
+        pysql2neo4j:
+                build: pysql2neo4j-dockerbuild/
+                depends_on:
+                        - mysqldb
+                        - neo4j
+                networks:
+                        - pysql2neo4j-backnet
+
